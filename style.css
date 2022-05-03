@@ -1,0 +1,121 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Press Start 2P', cursive;
+}
+
+body {
+  min-height: 100vh;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2, span {
+  font-size: 16px;
+}
+
+button {
+  border: none
+}
+
+button:hover {
+  background: #ddd;
+  cursor: pointer;
+}
+
+.container {
+  display: inline-block; 
+  position: relative;
+}
+
+#overlapping-div {
+  background: black; 
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  left: 0; 
+  bottom: 0; 
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+#battle-interface {
+  display: none;
+}
+
+.pokemon-info-card {
+  background: #fff; 
+  width: 250px; 
+  position: absolute; 
+  border: 4px black solid; 
+  padding: 12px
+}
+
+.pokemon-info-card#enemy {
+  top: 50px; 
+  left: 50px; 
+}
+
+.pokemon-info-card#player {
+  top: 330px;
+  right: 50px;
+}
+
+.health-box {
+  position: relative;
+}
+
+.empty-health-bar {
+  height: 5px; 
+  background: #ccc; 
+  margin-top: 10px;
+}
+
+.filled-health-bar {
+  height: 5px; 
+  background: green; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0;
+}
+
+.battle-info-box {
+  background: #fff; 
+  height: 140px; 
+  position: absolute; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  border-top: 4px black solid; 
+  display: flex;
+}
+
+#dialogue-box {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 12px;
+  background: #fff;
+  display: none;
+  cursor: pointer;
+}
+
+#attacks-box {
+  width: 66.66%; 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.attack-type-box {
+  width: 33.33%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  border-left: 4px black solid;
+}
