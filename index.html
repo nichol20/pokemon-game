@@ -1,4 +1,5 @@
 <head>
+  <meta charset="UTF-8">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -7,23 +8,50 @@
 </head>
 
 <div class="container">
+
+  <!-- Menu -->
+  <div id="menu-box">
+    <h1 class="game-title">Pokemon</h1>
+    <button id="start-game-button">Start Game</button>
+  </div>
   <div id="overlapping-div"></div>
+
+  <!-- Inventory -->
+  <img src="./assets/bag.png" id="inventory-icon" />
+  <div id="inventory-container">
+    <div id="inventory-header">
+      <div id="inventory-tabs">
+        <span>Pokemons</span>
+        <span>Items</span>
+      </div>
+      <img src="./assets/close-icon.png" class="close-icon" >
+    </div>
+    <ul id="pokemons-inventory"></ul>
+  </div>
 
   <canvas></canvas>
 
+  <!-- Wild Pokemon Warning -->
+  <div id="show-wild-pokemon-container">
+    <img id="pokemon-image-that-appeared">
+    <span id="wild-pokemon-warning">A wild pokemon appeared</span>
+    <button id="battle-button">Battle</button>
+  </div>
+
+  <!-- Battle Interface -->
   <div id="battle-interface">
-    <!-- Represents health bar of draggle (enemy) -->
+    <!-- Represents health bar of enemy -->
     <div class="pokemon-info-card" id="enemy">
-      <h2>Draggle</h2>
+      <h2 id="enemy-name"></h2>
       <div class="health-box">
         <div class="empty-health-bar"></div>
         <div class="filled-health-bar" id="enemy-health-bar" ></div>
       </div>
     </div>
 
-    <!-- Represents health bar of emby (us) -->
+    <!-- Represents health bar of player -->
     <div class="pokemon-info-card" id="player">
-      <h2>Emby</h2>
+      <h2 id="player-name"></h2>
       <div class="health-box">
         <div class="empty-health-bar"></div>
         <div class="filled-health-bar" id="player-health-bar" ></div>
@@ -32,13 +60,11 @@
 
     <div class="battle-info-box">
       <div id="dialogue-box"></div>
-      <div id="attacks-box">
-      </div>
+      <div id="attacks-box"></div>
       <div class="attack-type-box">
         <span id="attack-type">Attack Type</span>
       </div>
     </div>
-
   </div>
   
 </div>

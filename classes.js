@@ -6,6 +6,9 @@ class Sprite {
      sprites, 
      animate = false,  
      rotation = 0,
+     isEnemy = false,
+     width,
+     height,
     }) {
     this.position = position
     this.image = new Image()
@@ -13,8 +16,15 @@ class Sprite {
     this.image.onload = () => {
       this.width = this.image.width / this.frames.max
       this.height = this.image.height
+
+      this.imageWidth = width ?? this.width
+      this.imageHeight = height ?? this.height
     }
-    this.image.src = image.src
+    this.isEnemy = isEnemy
+
+    if(isEnemy) this.image.src = image.src.front_default
+    else this.image.src = image.src.back_default ?? image.src
+
     this.animate = animate
     this.sprites = sprites
     this.opacity = 1
@@ -36,12 +46,12 @@ class Sprite {
       this.height, 
       this.position.x,
       this.position.y,
-      this.width,
-      this.height, 
+      this.imageWidth,
+      this.imageHeight, 
     )
     c.restore()
 
-    if(!this.animate) return
+    if(!this.animate) return this.frames.val = 0
 
     if(this.frames.max > 1) {
       this.frames.elapsed++
@@ -58,7 +68,7 @@ class Sprite {
 class Monster extends Sprite {
   constructor({
     name,
-    isEnemy = false,
+    isEnemy,
     position, 
     image, 
     frames={ max: 1, hold: 10 }, 
@@ -66,6 +76,8 @@ class Monster extends Sprite {
     animate = false,  
     rotation = 0, 
     attacks,
+    width,
+    height,
   }){
     super({
       position,
@@ -74,9 +86,11 @@ class Monster extends Sprite {
       sprites,
       animate, 
       rotation,
+      isEnemy,
+      width,
+      height,
     })
     this.name = name
-    this.isEnemy = isEnemy
     this.health = 100
     this.attacks = attacks
   }
@@ -91,13 +105,19 @@ class Monster extends Sprite {
       opacity: 0
     })
 
+    if(this.isEnemy) {
+      playerPokemons.push(this.name)
+      localStorage.setItem('pokemons', JSON.stringify(playerPokemons))
+    }
+
     audios.battle.stop()
     audios.victory.play()
   }
 
   attack({ attack, recipient, renderedSprites }) {
     document.querySelector('#dialogue-box').style.display = 'block'
-    document.querySelector('#dialogue-box').innerHTML = `${this.name} used ${attack.name}`
+    document.querySelector('#dialogue-box').innerHTML =
+     `▼ ${this.name} used ${attack.name} and did ${attack.damage ?? 0} HP damage`
 
     let healthBar = '#enemy-health-bar'
     if(this.isEnemy) healthBar = '#player-health-bar'
@@ -107,92 +127,40 @@ class Monster extends Sprite {
 
     recipient.health -= attack.damage
     
-    switch (attack.name) {
-      case 'Fireball':
-        audios.initFireball.play()
-        const fireballImage = new Image()
-        fireballImage.src = './assets/fireball.png'
-        const fireball = new Sprite({
-          position: {
-            x: this.position.x,
-            y: this.position.y
-          },
-          image: fireballImage,
-          frames: {
-            max: 4,
-            hold: 10
-          },
-          animate: true,
-          rotation
+    const tl = gsap.timeline()
+    
+    let movementDistance = 20
+    if(this.isEnemy) movementDistance = -20
+
+    tl.to(this.position, {
+      x: this.position.x - movementDistance
+    }).to(this.position, {
+      x: this.position.x + movementDistance * 2,
+      duration: .1,
+      onComplete: () => {
+        // Enemy gets hit
+        audios.tackleHit.play()
+        gsap.to(healthBar, {
+          width: recipient.health + '%'
         })
 
-        renderedSprites.splice(1, 0, fireball)
-
-        gsap.to(fireball.position, {
-          x: recipient.position.x,
-          y: recipient.position.y,
-          onComplete: () => {
-            // Enemy gets hit
-            audios.fireballHit.play()
-            gsap.to(healthBar, {
-              width: recipient.health + '%'
-            })
-    
-            gsap.to(recipient.position, {
-              x: recipient.position.x + 10,
-              yoyo: true,
-              repeat: 5,
-              duration: .08
-            })
-    
-            gsap.to(recipient, {
-              opacity: 0,
-              yoyo: true,
-              repeat: 5,
-              duration: .08
-            })
-            renderedSprites.splice(1, 1)
-          }
+        gsap.to(recipient.position, {
+          x: recipient.position.x + 10,
+          yoyo: true,
+          repeat: 5,
+          duration: .08
         })
 
-        break
-      case 'Tackle':
-        const tl = gsap.timeline()
-        
-        let movementDistance = 20
-        if(this.isEnemy) movementDistance = -20
-    
-        tl.to(this.position, {
-          x: this.position.x - movementDistance
-        }).to(this.position, {
-          x: this.position.x + movementDistance * 2,
-          duration: .1,
-          onComplete: () => {
-            // Enemy gets hit
-            audios.tackleHit.play()
-            gsap.to(healthBar, {
-              width: recipient.health + '%'
-            })
-    
-            gsap.to(recipient.position, {
-              x: recipient.position.x + 10,
-              yoyo: true,
-              repeat: 5,
-              duration: .08
-            })
-    
-            gsap.to(recipient, {
-              opacity: 0,
-              yoyo: true,
-              repeat: 5,
-              duration: .08
-            })
-          }
-        }).to(this.position, {
-          x: this.position.x
+        gsap.to(recipient, {
+          opacity: 0,
+          yoyo: true,
+          repeat: 5,
+          duration: .08
         })
-        break
-    }
+      }
+    }).to(this.position, {
+      x: this.position.x
+    })
   }
 }
 

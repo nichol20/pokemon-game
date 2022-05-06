@@ -13,15 +13,10 @@ body {
 }
 
 h2, span {
-  font-size: 16px;
+  font-size: 1em;
 }
 
 button {
-  border: none
-}
-
-button:hover {
-  background: #ddd;
   cursor: pointer;
 }
 
@@ -42,6 +37,200 @@ button:hover {
   z-index: 100;
 }
 
+/* Menu */
+#menu-box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  background: lightgrey;
+  z-index: 100;
+}
+
+#menu-box .game-title {
+  font-size: 2em;
+  margin-bottom: 40px;
+}
+
+#start-game-button {
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: .875em;
+}
+
+#start-game-button:hover {
+  background: #ddd;
+}
+
+/********/
+
+/* Inventory */
+#inventory-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: none;
+}
+
+#inventory-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#inventory-header {
+  display: flex;
+  width: 600px;
+  justify-content: space-between;
+}
+
+#inventory-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+#inventory-tabs span {
+  font-size: 1em;
+  color: #fff;
+  border-bottom: 1px solid #fff;
+  cursor: pointer;
+}
+
+.close-icon {
+  cursor: pointer;
+}
+
+#pokemons-inventory {
+  display: grid;
+  grid-template-columns: repeat(5, 120px);
+  gap: 5px;
+  background: lightgray;
+  padding: 20px;
+  border-radius: 20px;
+  min-height: 450px;
+  overflow: auto;
+}
+
+#pokemons-inventory::-webkit-scrollbar {
+  width: 10px;
+}
+
+#pokemons-inventory::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+#pokemons-inventory::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+#pokemons-inventory::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.pokemon-card-item {
+  position: relative;
+	list-style: none;
+	color: rgb(0, 0, 0);
+	text-align: center;
+	border-radius: 20px;
+  height: 120px;
+  background-color: #444444;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pokemon-card-item:after {
+	content: "";
+  display: block;
+  width: 50%;
+  height: 45%;
+  border-radius: 100%;
+  background-color: #fff;
+  opacity: .7;
+  position: absolute;
+  top: 15%;
+  left: 25%;
+}
+
+.pokemon-card-image {
+  position: absolute;
+  z-index: 2;
+  top: 5%;
+  left: 10%;
+}
+
+.pokemon-card-name {
+  font-size: .675em;
+  color: #fff;
+
+}
+
+.pokemon-card-subtitle {
+  font-size: 0.425em;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 10px;
+}
+
+/* wild pokemon tab */
+#show-wild-pokemon-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  background: lightgray;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  display: none;
+}
+
+#show-wild-pokemon-container #wild-pokemon-warning {
+  font-size: .625em;
+}
+
+#show-wild-pokemon-container #battle-button {
+  padding: 10px 14px;
+  background: rgb(255, 59, 59);
+  color: white;
+  border-radius: 4px;
+  border: 1px solid black;
+}
+
+#show-wild-pokemon-container #battle-button:hover {
+  background: rgb(248, 22, 22);
+}
+
+/******/
+
+/* Battle interface */
 #battle-interface {
   display: none;
 }
@@ -112,6 +301,14 @@ button:hover {
   grid-template-columns: repeat(2, 1fr);
 }
 
+.attack-buttons {
+  border: none;
+}
+
+.attack-buttons:hover {
+  background: #ddd;
+}
+
 .attack-type-box {
   width: 33.33%; 
   display: flex; 
@@ -119,3 +316,5 @@ button:hover {
   justify-content: center; 
   border-left: 4px black solid;
 }
+
+/********/
