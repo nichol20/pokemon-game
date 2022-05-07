@@ -133,11 +133,41 @@ const wildPokemonWarningElement = document.querySelector('#wild-pokemon-warning'
 const inventoryIconElement = document.querySelector("#inventory-icon")
 const pokemonsInventoryElement = document.querySelector('#pokemons-inventory')
 const inventoryContainerElement = document.querySelector('#inventory-container')
+const itemsInventoryElement = document.querySelector('#items-inventory')
+const closeInventoryIconElement = document.querySelector('.close-inventory-icon')
+const pokemonTabElement = document.querySelector('#pokemons-tab')
+const itemsTabElement = document.querySelector('#items-tab')
+const pokemonDescriptionTabElement = document.querySelector('#pokemon-description-tab')
+const itemDescriptionTabElement = document.querySelector('#item-description-tab')
 
 let battleButtonEventToStartBattle, battleButtonEventToCancelAnimation
 
 battleButtonElement.addEventListener('click', battleButtonEventToStartBattle)
 battleButtonElement.addEventListener('click', battleButtonEventToCancelAnimation)
+inventoryIconElement.addEventListener('click', () => {
+  pokemonsInventoryElement.innerHTML = generatePokemonInventoryHTML()
+  itemsInventoryElement.innerHTML = generateItemInventoryHTML()
+  inventoryContainerElement.style.display = 'flex'
+})
+closeInventoryIconElement.addEventListener('click', () => inventoryContainerElement.style.display = 'none')
+pokemonTabElement.addEventListener('click', () => {
+  pokemonsInventoryElement.style.display = 'grid'
+  pokemonTabElement.style.borderBottom = '1px solid #fff'
+  itemsInventoryElement.style.display = 'none'
+  itemsTabElement.style.borderBottom = 'none'
+  itemDescriptionTabElement.style.width = '0px'
+  itemDescriptionTabElement.style.innerHTML = ''
+  itemDescriptionTabElement.style.display = 'none'
+})
+itemsTabElement.addEventListener('click', () => {
+  itemsInventoryElement.style.display = 'grid'
+  itemsTabElement.style.borderBottom = '1px solid #fff'
+  pokemonsInventoryElement.style.display = 'none'
+  pokemonTabElement.style.borderBottom = 'none'
+  pokemonDescriptionTabElement.style.width = '0px'
+  pokemonDescriptionTabElement.style.innerHTML = ''
+  pokemonDescriptionTabElement.style.display = 'none'
+})
 
 const rectangularCollision = ({ rectangle1, rectangle2 }) => {
   return(
@@ -306,7 +336,18 @@ const getPlayerItems = () => {
 
   if(!playerItems) {
     playerItems = {
-      pokeball: 10
+      "poke-ball": {
+        held: 10
+      },
+      "great-ball": {
+        held: 5
+      },
+      "safari-ball": {
+        held: 2
+      },
+      "master-ball": {
+        held: 1
+      }
     }
     localStorage.setItem('bag', JSON.stringify(playerItems))
   }
@@ -317,13 +358,78 @@ const getPlayerItems = () => {
   }
 }
 
+const showPokemonInformationInInventory = pokemonName => {
+  pokemonDescriptionTabElement.style.display = 'flex'
+  pokemonDescriptionTabElement.style.width = '220px'
+
+  const pokemon = pokemons[pokemonName]
+  const attacksTable = pokemon.attacks.reduce((accumulator, attack) => {
+    accumulator += `
+      <tr>
+        <td>${attack.name}</td>
+        <td>${attack.type}</td>
+      </tr>
+    `
+    return accumulator
+  }, '')
+  pokemonDescriptionTabElement.innerHTML = `
+    <img src="${pokemon.image.src.front_default}" id="pokemon-description-tab-pokemon-image">
+    <h3 id="pokemon-description-tab-pokemon-name">${pokemon.name}</h3>
+    <div id="pokemon-description-tab-stats-container">
+      <h4>Stats</h4>
+      <table>
+        <tr>
+          <td>hp</td>
+          <td>${pokemon.stats.hp}</td>
+        </tr>
+        <tr>
+          <td>attack</td>
+          <td>${pokemon.stats.attack}</td>
+        </tr>
+        <tr>
+          <td>defense</td>
+          <td>${pokemon.stats.defense}</td>
+        </tr>
+      </table>
+    </div>
+    <div id="pokemon-description-tab-attacks-container">
+      <h4>Attacks</h4>
+      <table>
+        ${attacksTable}
+      </table>
+    </div>
+  `
+}
+
+const showItemInformationInInventory = itemName => {
+  itemDescriptionTabElement.style.display = 'flex'
+  itemDescriptionTabElement.style.width = '220px'
+
+  itemDescriptionTabElement.innerHTML = `
+    <img src="${items[itemName].sprites.default}" id="item-description-tab-item-image">
+    <h3 id="item-description-tab-item-name">${itemName}</h3>
+    <span id="item-description-tab-item-description">${items[itemName].short_effect}</span>
+    <button id="item-description-tab-consume-button">Use</button>
+  `
+}
+
 const generatePokemonInventoryHTML = () => playerPokemons.reduce((accumulator, pokemonName) => {
   const currentPokemon = pokemons[pokemonName]
   accumulator += `
-    <li class="pokemon-card-item">
+    <li class="pokemon-card-item" onclick="showPokemonInformationInInventory('${pokemonName}')">
       <img src="${currentPokemon.image.src.front_default}" class="pokemon-card-image" />
       <h3 class="pokemon-card-name">${currentPokemon.name}</h3>
       <span class="pokemon-card-subtitle">${currentPokemon.types.join(' | ')}</span>
+    </li>
+  `
+  return accumulator
+}, '')
+ 
+const generateItemInventoryHTML = () => Object.keys(playerItems).reduce((accumulator, key) => {
+  accumulator += `
+    <li class="item-card-item" onclick="showItemInformationInInventory('${key}')">
+      <img src="${items[key].sprites.default}" class="item-card-image">
+      <span class="item-card-held">x${playerItems[key].held}</span>
     </li>
   `
   return accumulator
@@ -332,13 +438,12 @@ const generatePokemonInventoryHTML = () => playerPokemons.reduce((accumulator, p
 const initGame = async () => {
   await generateMoves()
   await generatePokemons()
+  await generatePokeballs()
   getPlayerItems()
   animate()
+  
   inventoryIconElement.style.display = 'block'
-  inventoryIconElement.addEventListener('click', () => {
-    pokemonsInventoryElement.innerHTML = generatePokemonInventoryHTML()
-    inventoryContainerElement.style.display = 'flex'
-  })
+  
   audios.map.play()
 
   // const pokemonKeys = Object.keys(pokemons)

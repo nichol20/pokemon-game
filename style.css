@@ -85,8 +85,8 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000;
-  display: flex;
+  z-index: 100;
+  display: none;
   justify-content: center;
   align-items: center;
   background: #000;
@@ -111,39 +111,33 @@ button {
 #inventory-tabs span {
   font-size: 1em;
   color: #fff;
+  cursor: pointer;
+}
+
+#pokemons-tab {
   border-bottom: 1px solid #fff;
+}
+
+.close-inventory-icon {
   cursor: pointer;
 }
 
-.close-icon {
-  cursor: pointer;
+#inventory-main {
+  display: flex;
+  justify-content: center;
 }
 
+/* Pokemons Inventory*/
 #pokemons-inventory {
   display: grid;
-  grid-template-columns: repeat(5, 120px);
+  grid-template-columns: repeat(auto-fill, 120px);
   gap: 5px;
-  background: lightgray;
+  background: #888888;
   padding: 20px;
   border-radius: 20px;
   min-height: 450px;
+  max-width: 620px;
   overflow: auto;
-}
-
-#pokemons-inventory::-webkit-scrollbar {
-  width: 10px;
-}
-
-#pokemons-inventory::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
- 
-#pokemons-inventory::-webkit-scrollbar-thumb {
-  background: #888; 
-}
-
-#pokemons-inventory::-webkit-scrollbar-thumb:hover {
-  background: #555; 
 }
 
 .pokemon-card-item {
@@ -159,6 +153,7 @@ button {
   justify-content: flex-end;
   flex-direction: column;
   gap: 5px;
+  cursor: pointer;
 }
 
 .pokemon-card-item:after {
@@ -184,7 +179,6 @@ button {
 .pokemon-card-name {
   font-size: .675em;
   color: #fff;
-
 }
 
 .pokemon-card-subtitle {
@@ -194,6 +188,206 @@ button {
   z-index: 2;
   margin-bottom: 10px;
 }
+
+/* Items Inventory*/
+#items-inventory {
+  display: none;
+  grid-template-columns: repeat(auto-fill, 90px);
+  gap: 5px;
+  background: #888888;
+  padding: 20px;
+  border-radius: 20px;
+  min-height: 450px;
+  max-width: 620px;
+  overflow: auto;
+}
+
+.item-card-item {
+  position: relative;
+	list-style: none;
+	color: rgb(0, 0, 0);
+	text-align: center;
+	border-radius: 100%;
+  height: 90px;
+  background-color: rgba(37, 37, 37, 0.767);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.item-card-item::after {
+  content: "";
+  display: block;
+  width: 91%;
+  height: 91%;
+  border-radius: 100%;
+  background-color: transparent;
+  border: 1px solid white;
+  opacity: .7;
+  position: absolute;
+  top: 3px;
+}
+
+.item-card-image {
+  position: relative;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+}
+
+.item-card-held {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 0.625em;
+  color: #fff;
+  text-shadow: 2px 2px rgb(0 0 0 / 30%);
+}
+
+#pokemons-inventory::-webkit-scrollbar,
+#items-inventory::-webkit-scrollbar
+{
+  width: 10px;
+}
+
+#pokemons-inventory::-webkit-scrollbar,
+#items-inventory::-webkit-scrollbar
+{
+  background: #f1f1f1; 
+}
+ 
+#pokemons-inventory::-webkit-scrollbar,
+#items-inventory::-webkit-scrollbar
+{
+  background: #888; 
+}
+
+#pokemons-inventory::-webkit-scrollbar,
+#items-inventory::-webkit-scrollbar
+{
+  background: #555; 
+}
+
+/* Pokemon Description Tab*/
+#pokemon-description-tab,
+#item-description-tab 
+{
+  position: relative;
+  width: 220px;
+  height: 100%;
+  background: #333;
+  border-radius: 20px;
+  transition: .5s;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 20px;
+}
+
+#pokemon-description-tab-pokemon-image {
+  margin-top: 60px;
+}
+
+#pokemon-description-tab-pokemon-name {
+  color: #fff;
+  font-size: 1em;
+}
+
+#pokemon-description-tab-stats-container {
+  margin-top: 20px;
+}
+
+#pokemon-description-tab-stats-container h4,
+#pokemon-description-tab-attacks-container h4
+{
+  font-size: .875em;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 8px;
+  background: #444444;
+}
+
+#pokemon-description-tab-stats-container table tr td:nth-child(1) {
+  color: #fff;
+  width: 216px;
+}
+
+#pokemon-description-tab-stats-container table tr td:nth-child(2) {
+  color: rgb(177, 177, 177);
+}
+
+#pokemon-description-tab-attacks-container {
+  margin-top: 10px;
+}
+
+#pokemon-description-tab-attacks-container table tr {
+  height: 30px;
+}
+
+#pokemon-description-tab-attacks-container table tr td:nth-child(1) {
+  color: #fff;
+  font-size: .625em;
+  width: 216px;
+}
+
+#pokemon-description-tab-attacks-container table tr td:nth-child(2) {
+  color: rgb(177, 177, 177);
+  font-size: .625em;
+}
+
+
+/* Item Description Tab*/
+
+#item-description-tab-item-image {
+  margin-top: 80px;
+  width: 60px;
+  height: 60px;
+}
+
+#item-description-tab-item-name {
+  color: #fff;
+  margin-top: 20px;
+  font-size: 1em;
+  background-color: #555;
+  width: 100%;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 4px;
+}
+
+#item-description-tab-item-description {
+  color: #fff;
+  margin-top: 40px;
+  font-size: .875em;
+  background-color: #555;
+  width: 100%;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 4px;
+}
+
+#item-description-tab-consume-button {
+  position: absolute;
+  bottom: 15;
+  background: rgb(0, 255, 0);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: .625em;
+  border: 1px solid #fff;
+  transition: .2s;
+}
+
+#item-description-tab-consume-button:hover {
+  background: rgb(0, 161, 0);
+}
+
+/*******/
 
 /* wild pokemon tab */
 #show-wild-pokemon-container {

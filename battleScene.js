@@ -25,9 +25,14 @@ const initBattle = ({ playerSelectedPokemon, enemySelectedPokemon }) => {
   enemyPokemon = new Monster({
     ...pokemons[enemySelectedPokemon],
     position: {
-      x: 900,
+      x: 460,
       y: 40
     },
+    frames: {
+      max: 1,
+      hold: 30
+    },
+    animate: false,
     width: 192,
     height: 192,
     isEnemy: true
@@ -35,9 +40,14 @@ const initBattle = ({ playerSelectedPokemon, enemySelectedPokemon }) => {
   playerPokemon = new Monster({
     ...pokemons[playerSelectedPokemon],
     position: {
-      x: 100,
+      x: 500,
       y: 240
     },
+    frames: {
+      max: 1,
+      hold: 30
+    },
+    animate: false,
     width: 192,
     height: 192,
   })
@@ -47,11 +57,11 @@ const initBattle = ({ playerSelectedPokemon, enemySelectedPokemon }) => {
 
   // Entry animation
   gsap.to(playerPokemon.position, {
-    x: playerPokemon.position.x + 140,
+    x: playerPokemon.position.x - 300,
     duration: .4
   })
   gsap.to(enemyPokemon.position, {
-    x: enemyPokemon.position.x - 140,
+    x: enemyPokemon.position.x + 300,
     duration: .4
   })
 
@@ -118,7 +128,6 @@ const animateBatlle = () => {
   renderedSprites.forEach(sprite => {
     sprite.draw()
   })
-  console.log('teste')
 }
 
 const endBattleAnimation = () => {
