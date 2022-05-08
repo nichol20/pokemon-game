@@ -131,6 +131,7 @@ button {
 #pokemons-inventory {
   display: grid;
   grid-template-columns: repeat(auto-fill, 120px);
+  grid-template-rows: repeat(auto-fill, 120px);
   gap: 5px;
   background: #888888;
   padding: 20px;
@@ -156,6 +157,10 @@ button {
   cursor: pointer;
 }
 
+.pokemon-card-item.active {
+  background: #01be00;
+}
+
 .pokemon-card-item:after {
 	content: "";
   display: block;
@@ -167,6 +172,7 @@ button {
   position: absolute;
   top: 15%;
   left: 25%;
+  pointer-events: none;
 }
 
 .pokemon-card-image {
@@ -174,11 +180,13 @@ button {
   z-index: 2;
   top: 5%;
   left: 10%;
+  pointer-events: none;
 }
 
 .pokemon-card-name {
   font-size: .675em;
   color: #fff;
+  pointer-events: none;
 }
 
 .pokemon-card-subtitle {
@@ -187,12 +195,14 @@ button {
   position: relative;
   z-index: 2;
   margin-bottom: 10px;
+  pointer-events: none;
 }
 
 /* Items Inventory*/
 #items-inventory {
   display: none;
   grid-template-columns: repeat(auto-fill, 90px);
+  grid-template-rows: repeat(auto-fill, 90px);
   gap: 5px;
   background: #888888;
   padding: 20px;
@@ -217,6 +227,10 @@ button {
   cursor: pointer;
 }
 
+.item-card-item.active {
+  background: #01be00;
+}
+
 .item-card-item::after {
   content: "";
   display: block;
@@ -228,6 +242,7 @@ button {
   opacity: .7;
   position: absolute;
   top: 3px;
+  pointer-events: none;
 }
 
 .item-card-image {
@@ -235,6 +250,7 @@ button {
   z-index: 2;
   width: 44px;
   height: 44px;
+  pointer-events: none;
 }
 
 .item-card-held {
@@ -244,6 +260,7 @@ button {
   font-size: 0.625em;
   color: #fff;
   text-shadow: 2px 2px rgb(0 0 0 / 30%);
+  pointer-events: none;
 }
 
 #pokemons-inventory::-webkit-scrollbar,
@@ -252,20 +269,20 @@ button {
   width: 10px;
 }
 
-#pokemons-inventory::-webkit-scrollbar,
-#items-inventory::-webkit-scrollbar
+#pokemons-inventory::-webkit-scrollbar-track,
+#items-inventory::-webkit-scrollbar-track
 {
   background: #f1f1f1; 
 }
  
-#pokemons-inventory::-webkit-scrollbar,
-#items-inventory::-webkit-scrollbar
+#pokemons-inventory::-webkit-scrollbar-thumb,
+#items-inventory::-webkit-scrollbar-thumb
 {
   background: #888; 
 }
 
-#pokemons-inventory::-webkit-scrollbar,
-#items-inventory::-webkit-scrollbar
+#pokemons-inventory::-webkit-scrollbar-thumb:hover ,
+#items-inventory::-webkit-scrollbar-thumb:hover 
 {
   background: #555; 
 }
@@ -422,6 +439,104 @@ button {
   background: rgb(248, 22, 22);
 }
 
+#choose-pokemon-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: lightgray;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+#choose-pokemon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 120px);
+  grid-template-rows: repeat(auto-fill, 120px);
+  gap: 5px;
+  background: #888888;
+  padding: 20px;
+  border-radius: 20px;
+  max-height: 450px;
+  max-width: 620px;
+  overflow: auto;
+}
+
+.choose-pokemon-card-item {
+  position: relative;
+	list-style: none;
+	color: rgb(0, 0, 0);
+	text-align: center;
+	border-radius: 20px;
+  height: 120px;
+  background-color: #444444;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.choose-pokemon-card-item.active {
+  background: rgb(255, 43, 43);
+}
+
+.choose-pokemon-card-item:after {
+	content: "";
+  display: block;
+  width: 50%;
+  height: 45%;
+  border-radius: 100%;
+  background-color: #fff;
+  opacity: .7;
+  position: absolute;
+  top: 15%;
+  left: 25%;
+  pointer-events: none;
+}
+
+#choose-pokemon-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+#choose-pokemon-list::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+#choose-pokemon-list::-webkit-scrollbar-thumb {
+  background: rgb(110, 110, 110); 
+}
+
+#choose-pokemon-list::-webkit-scrollbar-thumb:hover  {
+  background: #555; 
+}
+
+#choose-pokemon-cancel-battle-button,
+#choose-pokemon-battle-button
+{
+  padding: 10px 14px;
+  border-radius: 4px;
+  background: rgb(255, 43, 43);
+  transition: .2s;
+}
+
+#choose-pokemon-battle-button {
+  background: rgb(0, 201, 0);
+}
+
+#choose-pokemon-cancel-battle-button:hover {
+  background: red;
+}
+
+#choose-pokemon-battle-button:hover {
+  background: green;
+}
 /******/
 
 /* Battle interface */

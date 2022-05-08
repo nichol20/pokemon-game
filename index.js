@@ -127,29 +127,59 @@ const battle = {
 
 // Getting HTML Elements
 const showWildPokemonContainerElement = document.querySelector('#show-wild-pokemon-container')
-const battleButtonElement = document.querySelector('#battle-button')
-const pokemonImageElement = document.querySelector('#pokemon-image-that-appeared')
-const wildPokemonWarningElement = document.querySelector('#wild-pokemon-warning')
-const inventoryIconElement = document.querySelector("#inventory-icon")
-const pokemonsInventoryElement = document.querySelector('#pokemons-inventory')
-const inventoryContainerElement = document.querySelector('#inventory-container')
-const itemsInventoryElement = document.querySelector('#items-inventory')
-const closeInventoryIconElement = document.querySelector('.close-inventory-icon')
-const pokemonTabElement = document.querySelector('#pokemons-tab')
-const itemsTabElement = document.querySelector('#items-tab')
-const pokemonDescriptionTabElement = document.querySelector('#pokemon-description-tab')
-const itemDescriptionTabElement = document.querySelector('#item-description-tab')
+const battleButtonElement             = document.querySelector('#battle-button')
+const pokemonImageElement             = document.querySelector('#pokemon-image-that-appeared')
+const wildPokemonWarningElement       = document.querySelector('#wild-pokemon-warning')
+const inventoryIconElement            = document.querySelector("#inventory-icon")
+const pokemonsInventoryElement        = document.querySelector('#pokemons-inventory')
+const inventoryContainerElement       = document.querySelector('#inventory-container')
+const itemsInventoryElement           = document.querySelector('#items-inventory')
+const closeInventoryIconElement       = document.querySelector('.close-inventory-icon')
+const pokemonTabElement               = document.querySelector('#pokemons-tab')
+const itemsTabElement                 = document.querySelector('#items-tab')
+const pokemonDescriptionTabElement    = document.querySelector('#pokemon-description-tab')
+const itemDescriptionTabElement       = document.querySelector('#item-description-tab')
+const choosePokemonContainerElement   = document.querySelector('#choose-pokemon-container')
+const choosePokemonListElement        = document.querySelector('#choose-pokemon-list')
+const CancelBattleButonElement        = document.querySelector('#choose-pokemon-cancel-battle-button')
+const choosePokemonBattleButtonElement= document.querySelector('#choose-pokemon-battle-button')
 
-let battleButtonEventToStartBattle, battleButtonEventToCancelAnimation
+let battleButtonEventToPrepareBattle, battleButtonEventToCancelAnimation
+let handlingSelectedPokemonEvent, handlingSelectedItemEvent
+let startBattleEvent, handlingChosenPokemonEvent
 
-battleButtonElement.addEventListener('click', battleButtonEventToStartBattle)
+battleButtonElement.addEventListener('click', battleButtonEventToPrepareBattle)
 battleButtonElement.addEventListener('click', battleButtonEventToCancelAnimation)
+
 inventoryIconElement.addEventListener('click', () => {
   pokemonsInventoryElement.innerHTML = generatePokemonInventoryHTML()
   itemsInventoryElement.innerHTML = generateItemInventoryHTML()
+
+  // Handling pokemon inventory
+  const pokemonCards = document.querySelectorAll('.pokemon-card-item')
+  pokemonCards.forEach(card => card.removeEventListener('click', handlingSelectedPokemonEvent))
+  handlingSelectedPokemonEvent = e => {
+    showPokemonInformationInInventory(e.target.dataset.name)
+    pokemonCards.forEach(c => c.classList.remove('active'))
+    e.target.classList.add('active')
+  }
+  pokemonCards.forEach(card => card.addEventListener('click', handlingSelectedPokemonEvent))
+
+  // Handling item inventory
+  const itemCards = document.querySelectorAll('.item-card-item')
+  itemCards.forEach(card => card.removeEventListener('click', handlingSelectedItemEvent))
+  handlingSelectedItemEvent = e => {
+    showItemInformationInInventory(e.target.dataset.name)
+    itemCards.forEach(c => c.classList.remove('active'))
+    e.target.classList.add('active')
+  }
+  itemCards.forEach(card => card.addEventListener('click', handlingSelectedItemEvent))
+  
   inventoryContainerElement.style.display = 'flex'
 })
+
 closeInventoryIconElement.addEventListener('click', () => inventoryContainerElement.style.display = 'none')
+
 pokemonTabElement.addEventListener('click', () => {
   pokemonsInventoryElement.style.display = 'grid'
   pokemonTabElement.style.borderBottom = '1px solid #fff'
@@ -158,7 +188,9 @@ pokemonTabElement.addEventListener('click', () => {
   itemDescriptionTabElement.style.width = '0px'
   itemDescriptionTabElement.style.innerHTML = ''
   itemDescriptionTabElement.style.display = 'none'
+  document.querySelectorAll('.item-card-item').forEach(c => c.classList.remove('active'))
 })
+
 itemsTabElement.addEventListener('click', () => {
   itemsInventoryElement.style.display = 'grid'
   itemsTabElement.style.borderBottom = '1px solid #fff'
@@ -167,6 +199,16 @@ itemsTabElement.addEventListener('click', () => {
   pokemonDescriptionTabElement.style.width = '0px'
   pokemonDescriptionTabElement.style.innerHTML = ''
   pokemonDescriptionTabElement.style.display = 'none'
+  document.querySelectorAll('.pokemon-card-item').forEach(c => c.classList.remove('active'))
+})
+
+CancelBattleButonElement.addEventListener('click', () => {
+  audios.map.play()
+  audios.battle.stop()
+  battle.initiated = false
+
+  animate()
+  choosePokemonContainerElement.style.display = 'none'
 })
 
 const rectangularCollision = ({ rectangle1, rectangle2 }) => {
@@ -248,12 +290,12 @@ const animate = () => {
         const pokemonKeys = Object.keys(pokemons)
         const wildPokemon = pokemons[pokemonKeys[Math.floor(Math.random() * pokemonKeys.length)]]
         
-        battleButtonElement.removeEventListener('click', battleButtonEventToStartBattle)
-        battleButtonEventToStartBattle = () => {
+        battleButtonElement.removeEventListener('click', battleButtonEventToPrepareBattle)
+        battleButtonEventToPrepareBattle = () => {
           showWildPokemonContainerElement.style.display = 'none'
           takePlayerIntoBattle(wildPokemon)
         }
-        battleButtonElement.addEventListener('click', battleButtonEventToStartBattle)
+        battleButtonElement.addEventListener('click', battleButtonEventToPrepareBattle)
 
         // Showing the player the wild pokemon that appeared
         showWildPokemonContainerElement.style.display = 'flex'
@@ -318,12 +360,32 @@ const takePlayerIntoBattle = (wildPokemon) => {
         opacity: 0,
         duration: .4,
         onComplete() {
-          // active a new animation loop
-          initBattle({
-            playerSelectedPokemon: playerPokemons[0], 
-            enemySelectedPokemon: wildPokemon.name// Random pokemon
-          })
-          animateBatlle()
+          choosePokemonContainerElement.style.display = 'flex'
+          choosePokemonListElement.innerHTML = generateChoosePokemonListHTML()
+          let selectedPokemon
+
+          // Handling the chosen pokemon
+          const pokemonCards = document.querySelectorAll('.choose-pokemon-card-item')
+          pokemonCards.forEach(card => card.removeEventListener('click', handlingChosenPokemonEvent))
+          handlingChosenPokemonEvent = e => {
+            pokemonCards.forEach(c => c.classList.remove('active'))
+            e.target.classList.add('active')
+            selectedPokemon = e.target.dataset.name
+          }
+          pokemonCards.forEach(card => card.addEventListener('click', handlingChosenPokemonEvent))
+
+          // Starting battle
+          choosePokemonBattleButtonElement.removeEventListener('click', startBattleEvent) 
+          startBattleEvent = () => {
+            initBattle({
+              playerSelectedPokemon: selectedPokemon ?? playerPokemons[0], 
+              enemySelectedPokemon: wildPokemon.name // Random pokemon
+            })
+            // active a new animation loop
+            animateBatlle()
+            choosePokemonContainerElement.style.display = 'none'
+          }
+          choosePokemonBattleButtonElement.addEventListener('click', startBattleEvent) 
         }
       })
     }
@@ -416,7 +478,19 @@ const showItemInformationInInventory = itemName => {
 const generatePokemonInventoryHTML = () => playerPokemons.reduce((accumulator, pokemonName) => {
   const currentPokemon = pokemons[pokemonName]
   accumulator += `
-    <li class="pokemon-card-item" onclick="showPokemonInformationInInventory('${pokemonName}')">
+    <li class="pokemon-card-item" data-name="${pokemonName}">
+      <img src="${currentPokemon.image.src.front_default}" class="pokemon-card-image" />
+      <h3 class="pokemon-card-name">${currentPokemon.name}</h3>
+      <span class="pokemon-card-subtitle">${currentPokemon.types.join(' | ')}</span>
+    </li>
+  `
+  return accumulator
+}, '')
+
+const generateChoosePokemonListHTML = () => playerPokemons.reduce((accumulator, pokemonName) => {
+  const currentPokemon = pokemons[pokemonName]
+  accumulator += `
+    <li class="choose-pokemon-card-item" data-name="${pokemonName}">
       <img src="${currentPokemon.image.src.front_default}" class="pokemon-card-image" />
       <h3 class="pokemon-card-name">${currentPokemon.name}</h3>
       <span class="pokemon-card-subtitle">${currentPokemon.types.join(' | ')}</span>
@@ -427,7 +501,7 @@ const generatePokemonInventoryHTML = () => playerPokemons.reduce((accumulator, p
  
 const generateItemInventoryHTML = () => Object.keys(playerItems).reduce((accumulator, key) => {
   accumulator += `
-    <li class="item-card-item" onclick="showItemInformationInInventory('${key}')">
+    <li class="item-card-item" data-name="${key}">
       <img src="${items[key].sprites.default}" class="item-card-image">
       <span class="item-card-held">x${playerItems[key].held}</span>
     </li>
