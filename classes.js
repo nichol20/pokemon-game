@@ -104,14 +104,6 @@ class Monster extends Sprite {
     gsap.to(this, {
       opacity: 0
     })
-
-    if(this.isEnemy) {
-      playerPokemons.push(this.name)
-      localStorage.setItem('pokemons', JSON.stringify(playerPokemons))
-    }
-
-    audios.battle.stop()
-    audios.victory.play()
   }
 
   attack({ attack, recipient, renderedSprites }) {

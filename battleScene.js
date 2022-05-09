@@ -123,6 +123,7 @@ const initBattle = ({ playerSelectedPokemon, enemySelectedPokemon }) => {
 }
 
 const animateBatlle = () => {
+  GAMESTATE = BATTLING
   battleAnimationId = requestAnimationFrame(animateBatlle)
   battleBackground.draw()
   renderedSprites.forEach(sprite => {
@@ -130,7 +131,9 @@ const animateBatlle = () => {
   })
 }
 
-const endBattleAnimation = () => {
+const endBattleAnimation = () => { 
+  audios.battle.stop()
+  audios.victory.play()
   // Fade back to black
   gsap.to('#overlapping-div',{
     opacity: 1,
