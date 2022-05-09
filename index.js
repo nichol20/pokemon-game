@@ -9,13 +9,13 @@ const TRAVELLING = 'TRAVELLING'
 const BATTLING = 'BATTLING'
 
 const collisionsMap = []
-for(let i = 0; i < collisions.length; i += 240) {
-  collisionsMap.push(collisions.slice(i, 240 + i))
+for(let i = 0; i < collisions.length; i += 180) {
+  collisionsMap.push(collisions.slice(i, 180 + i))
 }
 
 const battleZonesMap = []
-for(let i = 0; i < battleZonesData.length; i += 240) {
-  battleZonesMap.push(battleZonesData.slice(i, 240 + i))
+for(let i = 0; i < battleZonesData.length; i += 180) {
+  battleZonesMap.push(battleZonesData.slice(i, 180 + i))
 }
 
 const boundaries = []
@@ -27,7 +27,7 @@ const offset = {
 // Creating tiles for collision
 collisionsMap.forEach((row, i) => {
   row.forEach((symbol, j) => {
-    if(symbol === 1025){
+    if(symbol === 13633){
       boundaries.push(new Boundary({
         position: {
           x: j * Boundary.width + offset.x,
@@ -42,7 +42,7 @@ collisionsMap.forEach((row, i) => {
 const battleZones = []
 battleZonesMap.forEach((row, i) => {
   row.forEach((symbol, j) => {
-    if(symbol === 1025){
+    if(symbol === 13633){
       battleZones.push(new Boundary({
         position: {
           x: j * Boundary.width + offset.x,
@@ -57,10 +57,10 @@ c.fillStyle = '#fff'
 c.fillRect(0, 0, canvas.width, canvas.height)
 
 const backgroundImage = new Image()
-backgroundImage.src = './assets/pokemonMap.png'
+backgroundImage.src = './assets/pokemon_map.png'
 
 const foregroundImage = new Image()
-foregroundImage.src = './assets/foregroundObjects.png'
+foregroundImage.src = './assets/foreground_pokemon_map.png'
 
 const playerDownImage = new Image()
 playerDownImage.src = './assets/playerDown.png'
@@ -149,6 +149,7 @@ const CancelBattleButonElement        = document.querySelector('#choose-pokemon-
 const choosePokemonBattleButtonElement= document.querySelector('#choose-pokemon-battle-button')
 
 inventoryIconElement.addEventListener('click', () => {
+  audios.zipper.play()
   pokemonsInventoryElement.innerHTML = generatePokemonInventoryHTML()
   itemsInventoryElement.innerHTML = generateItemInventoryHTML()
 
@@ -159,6 +160,7 @@ inventoryIconElement.addEventListener('click', () => {
       showPokemonInformationInInventory(e.target.dataset.pokemon)
       pokemonCards.forEach(c => c.classList.remove('active'))
       e.target.classList.add('active')
+      audios.selectItemnInventory.play()
     })
   })
 
@@ -169,6 +171,7 @@ inventoryIconElement.addEventListener('click', () => {
       showItemInformationInInventory(e.target.dataset.item)
       itemCards.forEach(c => c.classList.remove('active'))
       e.target.classList.add('active')
+      audios.selectItemnInventory.play()
     })
   })
   
@@ -557,6 +560,7 @@ const initGame = async () => {
 
 const menu = () => {
   document.querySelector('#start-game-button').addEventListener('click', async () => {
+    audios.selectMenuButton.play()
     document.querySelector('#menu-box').style.display = 'none'
     await initGame()
   })

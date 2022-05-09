@@ -4,6 +4,21 @@ const audios = {
     html5: true,
     volume: 0.1
   }),
+  selectMenuButton: new Howl({
+    src: './audios/selectMenuButton.mp3',
+    html5: true,
+    volume: 0.1
+  }),
+  zipper: new Howl({
+    src: './audios/zipper.wav',
+    html5: true,
+    volume: 0.1
+  }),
+  selectItemnInventory: new Howl({
+    src: './audios/selectItemInventory.wav',
+    html5: true,
+    volume: 0.1
+  }),
   initBattle: new Howl({
     src: './audios/initBattle.wav',
     html5: true,
