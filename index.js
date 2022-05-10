@@ -496,10 +496,19 @@ const showItemInformationInInventory = itemName => {
   if(consumeButtonElement) {
     handlingEventListenerOverload('click', consumeButtonElement, () => {
       inventoryContainerElement.style.display = 'none'
+      // reset item tab
+      itemDescriptionTabElement.style.width     = '0px'
+      itemDescriptionTabElement.style.innerHTML = ''
+      itemDescriptionTabElement.style.display   = 'none'
+
       playerItems[itemName].held -= 1
+
+      if(playerItems[itemName].held === 0) delete playerItems[itemName]
+
       playerPokemons.push(enemyPokemon.name)
       localStorage.setItem('pokemons', JSON.stringify(playerPokemons))
       localStorage.setItem('bag', JSON.stringify(playerItems))
+
       endBattleAnimation()
     })
   }
