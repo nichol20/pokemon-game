@@ -546,11 +546,15 @@ button {
 }
 
 .pokemon-info-card {
-  background: #fff; 
-  width: 250px; 
-  position: absolute; 
-  border: 4px black solid; 
-  padding: 12px
+  background: #fff;
+  width: 250px;
+  position: absolute;
+  border: 4px black solid;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 12px;
 }
 
 .pokemon-info-card#enemy {
@@ -559,27 +563,64 @@ button {
 }
 
 .pokemon-info-card#player {
-  top: 330px;
+  top: 305px;
   right: 50px;
+}
+
+.health-container {
+  height: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  background: #444;
+  border-radius: 20px;
+  padding: 0px 5px;
+}
+
+.health-container span {
+  color: yellow;
+  font-size: 1em;
 }
 
 .health-box {
   position: relative;
+  width: 200px;
+  height: 10px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid white;
 }
 
 .empty-health-bar {
-  height: 5px; 
-  background: #ccc; 
-  margin-top: 10px;
-}
-
-.filled-health-bar {
-  height: 5px; 
-  background: green; 
+  background: #ccc;
   position: absolute; 
   top: 0; 
   left: 0; 
   right: 0;
+  width: 100%;
+  height: 100%;
+  transition: .5s;
+}
+
+.filled-health-bar { 
+  background: #00ff00; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%;
+  height: 100%;
+  transition: .2s;
+}
+
+.hp-text-box {
+  width: 100%;
+  text-align: right;
+}
+
+.hp-text-box span {
+  font-size: .750em;
 }
 
 .battle-info-box {
@@ -591,6 +632,7 @@ button {
   right: 0; 
   border-top: 4px black solid; 
   display: flex;
+  
 }
 
 #dialogue-box {

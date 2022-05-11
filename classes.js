@@ -78,6 +78,8 @@ class Monster extends Sprite {
     attacks,
     width,
     height,
+    stats,
+    types
   }){
     super({
       position,
@@ -91,8 +93,10 @@ class Monster extends Sprite {
       height,
     })
     this.name = name
-    this.health = 100
+    this.health = stats.hp
+    this.stats = stats
     this.attacks = attacks
+    this.types = types
   }
 
   faint() {
@@ -106,34 +110,58 @@ class Monster extends Sprite {
     })
   }
 
-  attack({ attack, recipient, renderedSprites }) {
-    document.querySelector('#dialogue-box').style.display = 'block'
-    document.querySelector('#dialogue-box').innerHTML =
-     `▼ ${this.name} used ${attack.name} and did ${attack.damage ?? 0} HP damage`
-
+  attack({ attack, recipient }) {
     let healthBar = '#enemy-health-bar'
     if(this.isEnemy) healthBar = '#player-health-bar'
 
-    let rotation = 1
-    if(this.isEnemy) rotation = -2.2
-
-    recipient.health -= attack.damage
+    // Damage calculation
+    let damage = recipient.stats.defense - (this.stats.attack + (this.stats.attack * attack.power / 100))
     
-    const tl = gsap.timeline()
+    // More or less damage by type
+    recipient.types.forEach(type => {
+      if(counterTypes[type].double_damage_from.includes(attack.type)) damage *= 2
+      if(counterTypes[type].half_damage_from.includes(attack.type)) damage *= 0.5
+      if(counterTypes[type].no_damage_from.includes(attack.type)) damage *= 0
+    })
+    
+    if(damage > 0) damage = 0
+    
+    // Decreasing the life of who took damage
+    recipient.health += damage
+    if(recipient.health < 0) recipient.health = 0
+
+    // Changing player hp text
+    if(this.isEnemy) document.querySelector('#player-hp-text').innerHTML =
+    `${recipient.health}/${recipient.stats.hp}` 
+    
+    // Describing what happened
+    document.querySelector('#dialogue-box').style.display = 'block'
+    document.querySelector('#dialogue-box').innerHTML =
+    `▼ ${this.name} used ${attack.name} and did ${Math.round(Math.abs(damage))} HP damage`
+    
     
     let movementDistance = 20
     if(this.isEnemy) movementDistance = -20
-
+    
+    const damagePercentage = (recipient.health * 100 / recipient.stats.hp)
+    let backgroundColor
+    if(damagePercentage > 50) backgroundColor = '#00ff00'
+    else if(damagePercentage > 20) backgroundColor = '#ffff00'
+    else backgroundColor = '#ff0000'
+    
+    // Damage animation
+    const tl = gsap.timeline()
     tl.to(this.position, {
       x: this.position.x - movementDistance
     }).to(this.position, {
       x: this.position.x + movementDistance * 2,
       duration: .1,
       onComplete: () => {
-        // Enemy gets hit
-        audios.tackleHit.play()
+        // Recipient gets hit
+        audios.hit.play()
         gsap.to(healthBar, {
-          width: recipient.health + '%'
+          width: damagePercentage + '%',
+          background: backgroundColor
         })
 
         gsap.to(recipient.position, {

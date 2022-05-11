@@ -2,10 +2,11 @@ const audios = {
   map: new Howl({
     src: './audios/map.wav',
     html5: true,
+    loop: true,
     volume: 0.1
   }),
   selectMenuButton: new Howl({
-    src: './audios/selectMenuButton.mp3',
+    src: './audios/select_menu_button.mp3',
     html5: true,
     volume: 0.1
   }),
@@ -15,37 +16,28 @@ const audios = {
     volume: 0.1
   }),
   selectItemnInventory: new Howl({
-    src: './audios/selectItemInventory.wav',
+    src: './audios/select_item_inventory.wav',
     html5: true,
     volume: 0.1
   }),
   initBattle: new Howl({
-    src: './audios/initBattle.wav',
+    src: './audios/init_battle.wav',
     html5: true,
     volume: 0.1
   }),
   battle: new Howl({
     src: './audios/battle.mp3',
     html5: true,
+    loop: true,
     volume: 0.1
   }),
-  tackleHit: new Howl({
-    src: './audios/tackleHit.wav',
+  hit: new Howl({
+    src: './audios/hit.wav',
     html5: true,
     volume: 0.1
   }),
-  fireballHit: new Howl({
-    src: './audios/fireballHit.wav',
-    html5: true,
-    volume: 0.1
-  }),
-  initFireball: new Howl({
-    src: './audios/initFireball.wav',
-    html5: true,
-    volume: 0.1
-  }),
-  victory: new Howl({
-    src: './audios/victory.wav',
+  endOfBattle: new Howl({
+    src: './audios/end_of_battle.wav',
     html5: true,
     volume: 0.1
   })

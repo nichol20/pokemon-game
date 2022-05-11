@@ -9,7 +9,7 @@ const generateMoves = async () => {
       ...attacks,
       [name]: {
         name,
-        damage: power,
+        power,
         type: type.name
       }
     }

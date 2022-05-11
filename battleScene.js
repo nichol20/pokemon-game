@@ -20,6 +20,8 @@ const initBattle = ({ playerSelectedPokemon, enemySelectedPokemon }) => {
   document.querySelector('#dialogue-box').style.display = 'none'
   document.querySelector('#player-health-bar').style.width = '100%'
   document.querySelector('#enemy-health-bar').style.width = '100%'
+  document.querySelector('#enemy-health-bar').style.backgroundColor = '#00ff00'
+  document.querySelector('#player-health-bar').style.backgroundColor = '#00ff00'
   document.querySelector('#attacks-box').replaceChildren()
 
   enemyPokemon = new Monster({
@@ -51,6 +53,7 @@ const initBattle = ({ playerSelectedPokemon, enemySelectedPokemon }) => {
     width: 192,
     height: 192,
   })
+
   
   renderedSprites = [ enemyPokemon, playerPokemon ]
   queue = []
@@ -64,7 +67,9 @@ const initBattle = ({ playerSelectedPokemon, enemySelectedPokemon }) => {
     x: enemyPokemon.position.x + 300,
     duration: .4
   })
-
+  
+  // player hp text
+  document.querySelector('#player-hp-text').innerHTML = `${playerPokemon.stats.hp}/${playerPokemon.stats.hp}`
   // Inserting pokemon names into HTML document
   document.querySelector('#enemy-name').innerHTML =
    enemySelectedPokemon[0].toUpperCase() + enemySelectedPokemon.slice(1) // Capitalizing first letter
@@ -103,12 +108,12 @@ const initBattle = ({ playerSelectedPokemon, enemySelectedPokemon }) => {
           recipient: playerPokemon,
           renderedSprites
         })
+        if(playerPokemon.health <= 0) {
+          queue.push(() => playerPokemon.faint())
+          queue.push(() => endBattleAnimation())
+        }
       })
 
-      if(playerPokemon.health <= 0) {
-        queue.push(() => playerPokemon.faint())
-        queue.push(() => endBattleAnimation())
-      }
     })
 
     button.addEventListener('mouseenter', e => {
@@ -133,19 +138,21 @@ const animateBatlle = () => {
 
 const endBattleAnimation = () => { 
   audios.battle.stop()
-  audios.victory.play()
+  audios.endOfBattle.play()
   // Fade back to black
   gsap.to('#overlapping-div',{
     opacity: 1,
     onComplete: () => {
       cancelAnimationFrame(battleAnimationId)
+      
       animate()
+      audios.map.play()
+
       document.querySelector('#battle-interface').style.display = 'none'
       gsap.to('#overlapping-div', {
         opacity: 0
       })
       battle.initiated = false
-      audios.map.play()
     }
   })
 }

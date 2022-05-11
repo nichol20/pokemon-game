@@ -259,9 +259,9 @@ const animate = () => {
   GAMESTATE = TRAVELLING
   c.fillStyle = '#B2FBFF'
   c.fillRect(0, 0, canvas.width, canvas.height)
-
+  
   const animationId = requestAnimationFrame(animate)
-
+  
   background.draw()
 
   boundaries.forEach(boundary => {
@@ -328,7 +328,6 @@ const animate = () => {
   handlingEventListenerOverload('click', battleButtonElement, () => {
     // Deactivate current animation loop
     cancelAnimationFrame(animationId)
-    console.log('battle-button')
   }, 'battleButtonElement2')
 
   if(keys.w.pressed && lastKey === 'w') {
@@ -376,14 +375,16 @@ const takePlayerIntoBattle = (wildPokemon) => {
         onComplete() {
           choosePokemonContainerElement.style.display = 'flex'
           choosePokemonListElement.innerHTML = generateChoosePokemonListHTML()
-          let selectedPokemon
+          let selectedPokemon = playerPokemons[0]
 
           // Handling the chosen pokemon
           const pokemonCards = document.querySelectorAll('.choose-pokemon-card-item')
+          pokemonCards[0].classList.add('active')
           pokemonCards.forEach(card => {
             card.addEventListener('click', e => {
               pokemonCards.forEach(c => c.classList.remove('active'))
               e.target.classList.add('active')
+              audios.selectItemnInventory.play()
               selectedPokemon = e.target.dataset.pokemon
             })
           })
@@ -391,8 +392,8 @@ const takePlayerIntoBattle = (wildPokemon) => {
           // Starting battle
           handlingEventListenerOverload('click', choosePokemonBattleButtonElement, () => {
             initBattle({
-              playerSelectedPokemon: selectedPokemon ?? playerPokemons[0], 
-              enemySelectedPokemon: wildPokemon.name // Random pokemon
+              playerSelectedPokemon: selectedPokemon, 
+              enemySelectedPokemon: wildPokemon.name
             })
             // active a new animation loop
             animateBatlle()
@@ -554,10 +555,9 @@ const initGame = async () => {
   await generatePokeballs()
   getPlayerItems()
   animate()
+  audios.map.play()
   
   inventoryIconElement.style.display = 'block'
-  
-  audios.map.play()
 
   // const pokemonKeys = Object.keys(pokemons)
   // initBattle({ 
